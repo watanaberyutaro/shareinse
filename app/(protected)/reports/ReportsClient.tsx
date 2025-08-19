@@ -1,17 +1,73 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { FileText, Download, Filter, TrendingUp, Users, Building2, Calendar } from 'lucide-react'
+import { FileText, Download, TrendingUp, Users } from 'lucide-react'
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { format, startOfMonth, endOfMonth } from 'date-fns'
+import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
 import { createClient } from '@/lib/supabase/client'
 
+interface Department {
+  id: string
+  name: string
+}
+
+interface Staff {
+  id: string
+  display_name: string
+  email: string
+  department_id: string | null
+}
+
+interface Company {
+  id: string
+  name: string
+}
+
+interface Profile {
+  id: string
+  display_name: string
+  email: string
+  role: string
+  department_id: string | null
+}
+
+interface Assignment {
+  id: string
+  project_name: string
+  project_location: string
+  work_month: string
+  staff_name: string
+  sales_amount: number
+  profit_amount: number
+  project_manager_id: string | null
+  staff_manager_id: string | null
+  project_type: 'spot' | 'continuous'
+  work_days: number
+  work_dates?: string[]
+  daily_rate: number
+  cost_rate: number
+  client_company?: {
+    name: string
+  }
+  vendor_company?: {
+    name: string
+  }
+  project_manager?: {
+    display_name: string
+    department_id: string
+  }
+  staff_manager?: {
+    display_name: string
+    department_id: string
+  }
+}
+
 interface ReportsClientProps {
-  profile: any
-  departments: any[]
-  staffList: any[]
-  companies: any[]
+  profile: Profile | null
+  departments: Department[]
+  staffList: Staff[]
+  companies: Company[]
   canViewAllData: boolean
 }
 
@@ -28,7 +84,14 @@ export default function ReportsClient({
   const [selectedPeriod, setSelectedPeriod] = useState(format(new Date(), 'yyyy-MM'))
   const [selectedCustomer, setSelectedCustomer] = useState('')
   const [selectedStaff, setSelectedStaff] = useState(canViewAllData ? '' : profile?.id)
-  const [reportData, setReportData] = useState<any>(null)
+  const [reportData, setReportData] = useState<{
+    chartData?: Array<{ name: string; value: number; [key: string]: string | number }>
+    pieData?: Array<{ name: string; value: number }>
+    lineData?: Array<{ month: string; sales: number; profit: number }>
+    totalSales?: number
+    totalProfit?: number
+    totalCount?: number
+  } | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899']
@@ -125,8 +188,14 @@ export default function ReportsClient({
     }
   }
 
-  const processperiodData = (assignments: any[]) => {
-    const monthlyData: { [key: string]: any } = {}
+  const processperiodData = (assignments: Assignment[]) => {
+    const monthlyData: { [key: string]: {
+      month: string
+      sales: number
+      profit: number
+      count: number
+      clients: Set<string>
+    }} = {}
 
     assignments.forEach(assignment => {
       const month = assignment.work_month.slice(0, 7)
@@ -161,12 +230,17 @@ export default function ReportsClient({
     }))
   }
 
-  const processCustomerData = (assignments: any[], companies: any[]) => {
-    const customerData: { [key: string]: any } = {}
+  const processCustomerData = (assignments: Assignment[]) => {
+    const customerData: { [key: string]: {
+      name: string
+      type: string
+      sales: number
+      profit: number
+      count: number
+    }} = {}
 
     assignments.forEach(assignment => {
       const clientName = assignment.client_company?.name || '未設定'
-      const vendorName = assignment.vendor_company?.name || '未設定'
 
       // クライアント側の集計
       if (!customerData[clientName]) {
@@ -193,8 +267,20 @@ export default function ReportsClient({
     return Object.values(customerData).sort((a, b) => b.sales - a.sales)
   }
 
-  const processStaffData = (assignments: any[], staffList: any[]) => {
-    const staffData: { [key: string]: any } = {}
+  const processStaffData = (assignments: Assignment[]) => {
+    const staffData: { [key: string]: {
+      id: string
+      name: string
+      department: string
+      projectSales: number
+      projectProfit: number
+      projectCount: number
+      staffSales: number
+      staffProfit: number
+      staffCount: number
+      totalSales: number
+      totalProfit: number
+    }} = {}
 
     assignments.forEach(assignment => {
       // 案件担当者の集計
@@ -272,7 +358,7 @@ export default function ReportsClient({
     const headers = Object.keys(reportData[0])
     csv += headers.join(',') + '\n'
 
-    reportData.forEach((row: any) => {
+    reportData.forEach((row: { [key: string]: string | number }) => {
       const values = headers.map(header => {
         const value = row[header]
         return typeof value === 'number' ? value : `"${value}"`
@@ -324,7 +410,7 @@ export default function ReportsClient({
             </label>
             <select
               value={reportType}
-              onChange={(e) => setReportType(e.target.value as any)}
+              onChange={(e) => setReportType(e.target.value as 'period' | 'customer' | 'staff')}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
               <option value="period">期間別</option>
@@ -341,7 +427,7 @@ export default function ReportsClient({
                 </label>
                 <select
                   value={periodType}
-                  onChange={(e) => setPeriodType(e.target.value as any)}
+                  onChange={(e) => setPeriodType(e.target.value as 'month' | 'quarter' | 'year')}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="month">月次</option>
@@ -416,7 +502,7 @@ export default function ReportsClient({
                 <div>
                   <p className="text-sm text-gray-600">総売上</p>
                   <p className="text-2xl font-bold text-gray-800 mt-2">
-                    {formatCurrency(reportData.reduce((sum: number, d: any) => sum + (d.sales || d.totalSales || 0), 0))}
+                    {formatCurrency(reportData.reduce((sum: number, d: { sales?: number; totalSales?: number }) => sum + (d.sales || d.totalSales || 0), 0))}
                   </p>
                 </div>
                 <TrendingUp className="h-10 w-10 text-blue-500" />
@@ -428,7 +514,7 @@ export default function ReportsClient({
                 <div>
                   <p className="text-sm text-gray-600">総利益</p>
                   <p className="text-2xl font-bold text-gray-800 mt-2">
-                    {formatCurrency(reportData.reduce((sum: number, d: any) => sum + (d.profit || d.totalProfit || 0), 0))}
+                    {formatCurrency(reportData.reduce((sum: number, d: { profit?: number; totalProfit?: number }) => sum + (d.profit || d.totalProfit || 0), 0))}
                   </p>
                 </div>
                 <TrendingUp className="h-10 w-10 text-green-500" />
@@ -440,7 +526,7 @@ export default function ReportsClient({
                 <div>
                   <p className="text-sm text-gray-600">件数</p>
                   <p className="text-2xl font-bold text-gray-800 mt-2">
-                    {reportData.reduce((sum: number, d: any) => sum + (d.count || 0), 0)} 件
+                    {reportData.reduce((sum: number, d: { count?: number }) => sum + (d.count || 0), 0)} 件
                   </p>
                 </div>
                 <Users className="h-10 w-10 text-purple-500" />
@@ -495,7 +581,7 @@ export default function ReportsClient({
                         outerRadius={100}
                         label={(entry) => entry.name}
                       >
-                        {reportData.slice(0, 5).map((entry: any, index: number) => (
+                        {reportData.slice(0, 5).map((entry: { name?: string; value?: number }, index: number) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
@@ -589,7 +675,7 @@ export default function ReportsClient({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {reportData.map((row: any, index: number) => (
+                  {reportData.map((row: { [key: string]: string | number }, index: number) => (
                     <tr key={index} className="hover:bg-gray-50">
                       {reportType === 'period' && (
                         <>

@@ -39,7 +39,7 @@ export default function LoginPage() {
         router.push('/dashboard')
         router.refresh()
       }
-    } catch (err) {
+    } catch {
       setError('ログインに失敗しました')
     } finally {
       setIsLoading(false)
@@ -142,7 +142,7 @@ export default function LoginPage() {
           }, 3000)
         }
       }
-    } catch (err) {
+    } catch {
       setError('登録に失敗しました')
     } finally {
       setIsLoading(false)

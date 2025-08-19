@@ -8,12 +8,50 @@ import { ja } from 'date-fns/locale'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
+interface User {
+  email: string
+}
+
+interface Profile {
+  id: string
+  display_name: string
+  email: string
+  role: string
+  department_id: string | null
+  created_at: string
+  updated_at: string
+}
+
+interface SalesHistory {
+  month: string
+  sales: number
+  profit: number
+  count: number
+}
+
+interface Assignment {
+  id: string
+  project_name: string
+  project_location: string
+  work_month: string
+  staff_name: string
+  sales_amount: number
+  profit_amount: number
+}
+
+interface Target {
+  id: string
+  sales_target: number | null
+  profit_target: number | null
+  assignment_target: number | null
+}
+
 interface MypageClientProps {
-  user: any
-  profile: any
-  salesHistory: any[]
-  currentAssignments: any[]
-  target: any
+  user: User
+  profile: Profile | null
+  salesHistory: SalesHistory[]
+  currentAssignments: Assignment[]
+  target: Target | null
 }
 
 export default function MypageClient({
