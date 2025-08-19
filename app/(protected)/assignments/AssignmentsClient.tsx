@@ -275,8 +275,15 @@ export default function AssignmentsClient({
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm text-gray-900">
-                      {assignment.work_month ? (
-                        format(new Date(assignment.work_month), 'yyyy年M月', { locale: ja })
+                      {assignment.work_month && assignment.work_month.trim() !== '' ? (
+                        (() => {
+                          try {
+                            return format(new Date(assignment.work_month), 'yyyy年M月', { locale: ja })
+                          } catch (error) {
+                            console.warn('Invalid work_month value:', assignment.work_month)
+                            return '日付未設定'
+                          }
+                        })()
                       ) : (
                         '日付未設定'
                       )}
