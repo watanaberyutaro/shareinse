@@ -14,16 +14,21 @@ interface Assignment {
   project_number: string
   project_name: string
   project_location: string
-  assignment_type: 'spot' | 'continuous'
+  assignment_type?: 'spot' | 'continuous'
+  project_type?: 'spot' | 'continuous'  // 古いフィールドとの互換性
   work_dates: string[]
   work_month: string
-  company_id: string
+  company_id?: string
   staff_name: string
+  staff_company?: string
   project_manager_id: string | null
   staff_manager_id: string | null
-  created_by: string
+  created_by?: string
   created_at: string
   updated_at: string
+  daily_rate?: number
+  cost_rate?: number
+  work_days?: number
   project_manager?: {
     display_name: string
   }
@@ -108,7 +113,8 @@ export default function AssignmentsClient({
   const canEdit = (assignment: Assignment) => {
     return userRole === 'admin' || 
            userRole === 'leader' || 
-           assignment.created_by === currentUserId
+           (assignment.created_by && assignment.created_by === currentUserId) ||
+           !assignment.created_by  // 古いデータの場合は編集可能にする
   }
 
   const formatCurrency = (value: number) => {

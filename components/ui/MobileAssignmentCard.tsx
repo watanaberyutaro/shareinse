@@ -9,10 +9,11 @@ interface Assignment {
   project_number: string
   project_name: string
   project_location: string
-  assignment_type: 'spot' | 'continuous'
+  assignment_type?: 'spot' | 'continuous'
+  project_type?: 'spot' | 'continuous'  // 古いフィールドとの互換性
   work_dates: string[]
   work_month: string
-  company_id: string
+  company_id?: string
   staff_name: string
   project_manager?: {
     display_name: string
@@ -46,9 +47,12 @@ export default function MobileAssignmentCard({
     }).format(value)
   }
 
-  const getAssignmentTypeLabel = (type: 'spot' | 'continuous') => {
+  const getAssignmentTypeLabel = (type?: 'spot' | 'continuous') => {
     return type === 'spot' ? 'スポット' : '継続'
   }
+
+  // assignment_type または project_type を使用（後方互換性）
+  const assignmentType = assignment.assignment_type || assignment.project_type || 'spot'
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-3">
@@ -57,11 +61,11 @@ export default function MobileAssignmentCard({
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
             <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-              assignment.assignment_type === 'spot' 
+              assignmentType === 'spot' 
                 ? 'bg-blue-100 text-blue-800' 
                 : 'bg-green-100 text-green-800'
             }`}>
-              {getAssignmentTypeLabel(assignment.assignment_type)}
+              {getAssignmentTypeLabel(assignmentType)}
             </span>
             <span className="text-xs text-gray-500">#{assignment.project_number}</span>
           </div>
@@ -108,7 +112,7 @@ export default function MobileAssignmentCard({
           <Calendar className="h-4 w-4 text-gray-400" />
           <span>
             {format(new Date(assignment.work_month + '-01'), 'yyyy年M月', { locale: ja })}
-            {assignment.assignment_type === 'spot' && assignment.work_dates && (
+            {assignmentType === 'spot' && assignment.work_dates && (
               <span className="ml-1">({assignment.work_dates.length}日間)</span>
             )}
           </span>
