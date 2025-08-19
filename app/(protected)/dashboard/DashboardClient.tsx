@@ -106,23 +106,23 @@ export default function DashboardClient({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* ヘッダー */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-800">ダッシュボード</h1>
-        <p className="text-gray-600 mt-2">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">ダッシュボード</h1>
+        <p className="text-sm md:text-base text-gray-600 mt-1 md:mt-2">
           {format(new Date(), 'yyyy年M月', { locale: ja })}の全社実績
         </p>
       </div>
 
       {/* 全社目標と実績 */}
       {companyTarget && companyTarget.sales_target > 0 && (
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-            <Target className="h-5 w-5" />
+        <div className="bg-white rounded-lg shadow p-4 md:p-6">
+          <h2 className="text-base md:text-lg font-semibold text-gray-800 mb-3 md:mb-4 flex items-center gap-2">
+            <Target className="h-4 md:h-5 w-4 md:w-5" />
             全社目標達成状況
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             {/* 売上 */}
             <div>
               <div className="flex justify-between items-baseline mb-2">
@@ -193,12 +193,12 @@ export default function DashboardClient({
       )}
 
       {/* 全社KPIカード */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
-          <div className="flex items-center justify-between">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg p-3 md:p-6 text-white">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-sm opacity-90">全社売上</p>
-              <p className="text-2xl font-bold mt-2">
+              <p className="text-xs md:text-sm opacity-90">全社売上</p>
+              <p className="text-lg md:text-2xl font-bold mt-1 md:mt-2">
                 {formatCompactCurrency(companyStats.totalSales)}
               </p>
               {companyTarget && companyTarget.sales_target > 0 && (
@@ -207,15 +207,15 @@ export default function DashboardClient({
                 </p>
               )}
             </div>
-            <DollarSign className="h-10 w-10 opacity-80" />
+            <DollarSign className="h-8 md:h-10 w-8 md:w-10 opacity-80 mt-2 md:mt-0" />
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-lg p-6 text-white">
-          <div className="flex items-center justify-between">
+        <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-lg p-3 md:p-6 text-white">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-sm opacity-90">全社利益</p>
-              <p className="text-2xl font-bold mt-2">
+              <p className="text-xs md:text-sm opacity-90">全社利益</p>
+              <p className="text-lg md:text-2xl font-bold mt-1 md:mt-2">
                 {formatCompactCurrency(companyStats.totalProfit)}
               </p>
               {companyTarget && companyTarget.profit_target > 0 && (
@@ -224,15 +224,15 @@ export default function DashboardClient({
                 </p>
               )}
             </div>
-            <TrendingUp className="h-10 w-10 opacity-80" />
+            <TrendingUp className="h-8 md:h-10 w-8 md:w-10 opacity-80 mt-2 md:mt-0" />
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
-          <div className="flex items-center justify-between">
+        <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg shadow-lg p-3 md:p-6 text-white">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-sm opacity-90">全社アサイン数</p>
-              <p className="text-2xl font-bold mt-2">
+              <p className="text-xs md:text-sm opacity-90">全社アサイン数</p>
+              <p className="text-lg md:text-2xl font-bold mt-1 md:mt-2">
                 {companyStats.totalAssignments} 件
               </p>
               {companyTarget && companyTarget.assignment_target > 0 && (
@@ -241,15 +241,15 @@ export default function DashboardClient({
                 </p>
               )}
             </div>
-            <Users className="h-10 w-10 opacity-80" />
+            <Users className="h-8 md:h-10 w-8 md:w-10 opacity-80 mt-2 md:mt-0" />
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg shadow-lg p-6 text-white">
-          <div className="flex items-center justify-between">
+        <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg shadow-lg p-3 md:p-6 text-white">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-sm opacity-90">全社粗利率</p>
-              <p className="text-2xl font-bold mt-2">
+              <p className="text-xs md:text-sm opacity-90">全社粗利率</p>
+              <p className="text-lg md:text-2xl font-bold mt-1 md:mt-2">
                 {companyStats.grossMarginRate}%
               </p>
             </div>

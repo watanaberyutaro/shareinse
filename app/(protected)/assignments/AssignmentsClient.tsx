@@ -5,6 +5,7 @@ import { Plus, Edit2, Trash2, Search, Calendar } from 'lucide-react'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
 import AssignmentForm from './AssignmentForm'
+import MobileAssignmentCard from '@/components/ui/MobileAssignmentCard'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
@@ -191,8 +192,24 @@ export default function AssignmentsClient({
         </div>
       </div>
 
-      {/* テーブル */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      {/* モバイル用カード表示 */}
+      <div className="md:hidden">
+        {filteredAssignments.map((assignment) => (
+          <MobileAssignmentCard
+            key={assignment.id}
+            assignment={assignment}
+            canEdit={canEdit(assignment)}
+            onEdit={() => {
+              setEditingAssignment(assignment)
+              setIsFormOpen(true)
+            }}
+            onDelete={() => handleDelete(assignment.id)}
+          />
+        ))}
+      </div>
+
+      {/* デスクトップ用テーブル表示 */}
+      <div className="hidden md:block bg-white rounded-lg shadow overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">

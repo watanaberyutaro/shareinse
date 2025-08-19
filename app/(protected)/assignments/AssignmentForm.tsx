@@ -221,22 +221,22 @@ export default function AssignmentForm({
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
-          <h2 className="text-xl font-semibold">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end md:items-center justify-center md:p-4 z-50">
+      <div className="bg-white rounded-t-2xl md:rounded-lg w-full md:max-w-4xl max-h-[85vh] md:max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
+          <h2 className="text-lg md:text-xl font-semibold">
             {assignment ? 'アサイン編集' : '新規アサイン登録'}
           </h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <X className="h-6 w-6" />
+            <X className="h-5 md:h-6 w-5 md:w-6" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-4 md:p-6 space-y-4 md:space-y-6">
           {/* 基本情報 */}
           <div>
-            <h3 className="text-lg font-medium mb-4">基本情報</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <h3 className="text-base md:text-lg font-medium mb-3 md:mb-4">基本情報</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   案件名 *
@@ -284,8 +284,8 @@ export default function AssignmentForm({
 
           {/* スタッフ情報 */}
           <div>
-            <h3 className="text-lg font-medium mb-4">スタッフ情報</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <h3 className="text-base md:text-lg font-medium mb-3 md:mb-4">スタッフ情報</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   スタッフ名 *
@@ -315,8 +315,8 @@ export default function AssignmentForm({
 
           {/* 企業情報 */}
           <div>
-            <h3 className="text-lg font-medium mb-4">企業情報</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <h3 className="text-base md:text-lg font-medium mb-3 md:mb-4">企業情報</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   案件元企業
