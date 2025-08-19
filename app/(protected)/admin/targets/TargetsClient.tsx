@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Target, Plus, Edit2, Trash2, Save, X } from 'lucide-react'
+import { Plus, Edit2, Trash2, Save, X } from 'lucide-react'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
 
@@ -17,6 +17,12 @@ interface TargetData {
   created_by: string | null
   created_at: string
   updated_at: string
+  profiles?: {
+    display_name: string
+  }
+  departments?: {
+    name: string
+  }
 }
 
 interface User {
@@ -157,9 +163,9 @@ export default function TargetsClient({
           alert('目標を更新しました')
         }
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error in handleSave:', error)
-      alert(`エラーが発生しました: ${error.message || '不明なエラー'}`)
+      alert(`エラーが発生しました: ${error instanceof Error ? error.message : '不明なエラー'}`)
     }
   }
 

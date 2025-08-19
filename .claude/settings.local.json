@@ -17,7 +17,12 @@
       "Bash(do mv \"$file\" .)",
       "Bash(true)",
       "Bash(done)",
-      "Bash(do [ \"$file\" != \"assign-management/.\" ])"
+      "Bash(do [ \"$file\" != \"assign-management/.\" ])",
+      "Bash(git commit:*)",
+      "Bash(wc:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint:*)",
+      "Bash(sed:*)"
     ],
     "deny": [],
     "ask": []

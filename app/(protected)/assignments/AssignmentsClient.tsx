@@ -1,17 +1,56 @@
 'use client'
 
 import { useState } from 'react'
-import { Plus, Edit2, Trash2, Search, Filter, Calendar } from 'lucide-react'
+import { Plus, Edit2, Trash2, Search, Calendar } from 'lucide-react'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
 import AssignmentForm from './AssignmentForm'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
+interface Assignment {
+  id: string
+  project_number: string
+  project_name: string
+  project_location: string
+  assignment_type: 'spot' | 'continuous'
+  work_dates: string[]
+  work_month: string
+  company_id: string
+  staff_name: string
+  project_manager_id: string | null
+  staff_manager_id: string | null
+  created_by: string
+  created_at: string
+  updated_at: string
+  project_manager?: {
+    display_name: string
+  }
+  staff_manager?: {
+    display_name: string
+  }
+  companies?: {
+    name: string
+  }
+}
+
+interface Staff {
+  id: string
+  display_name: string
+  email: string
+  role: string
+  department_id: string | null
+}
+
+interface Company {
+  id: string
+  name: string
+}
+
 interface AssignmentsClientProps {
-  assignments: any[]
-  staffList: any[]
-  companies: any[]
+  assignments: Assignment[]
+  staffList: Staff[]
+  companies: Company[]
   currentUserId: string
   userRole: 'admin' | 'leader' | 'member'
 }
@@ -29,7 +68,7 @@ export default function AssignmentsClient({
   const [filterMonth, setFilterMonth] = useState('')
   const [filterType, setFilterType] = useState<'all' | 'spot' | 'continuous'>('all')
   const [isFormOpen, setIsFormOpen] = useState(false)
-  const [editingAssignment, setEditingAssignment] = useState<any>(null)
+  const [editingAssignment, setEditingAssignment] = useState<Assignment | null>(null)
 
   // フィルタリング
   const filteredAssignments = assignments.filter(assignment => {
@@ -59,13 +98,13 @@ export default function AssignmentsClient({
       } else {
         router.refresh()
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Delete error:', error)
-      alert(`削除に失敗しました: ${error.message || '不明なエラー'}`)
+      alert(`削除に失敗しました: ${error instanceof Error ? error.message : '不明なエラー'}`)
     }
   }
 
-  const canEdit = (assignment: any) => {
+  const canEdit = (assignment: Assignment) => {
     return userRole === 'admin' || 
            userRole === 'leader' || 
            assignment.created_by === currentUserId
