@@ -510,7 +510,11 @@ export default function DashboardClient({
                     {formatCurrency(assignment.daily_rate * (assignment.work_days || 0))}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {format(new Date(assignment.work_month), 'yyyy年M月', { locale: ja })}
+                    {assignment.work_month ? (
+                      format(new Date(assignment.work_month), 'yyyy年M月', { locale: ja })
+                    ) : (
+                      '日付未設定'
+                    )}
                   </p>
                 </div>
               </div>

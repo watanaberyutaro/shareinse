@@ -111,7 +111,11 @@ export default function MobileAssignmentCard({
         <div className="flex items-center gap-2 text-gray-600">
           <Calendar className="h-4 w-4 text-gray-400" />
           <span>
-            {format(new Date(assignment.work_month + '-01'), 'yyyy年M月', { locale: ja })}
+            {assignment.work_month ? (
+              format(new Date(assignment.work_month + '-01'), 'yyyy年M月', { locale: ja })
+            ) : (
+              '日付未設定'
+            )}
             {assignmentType === 'spot' && assignment.work_dates && (
               <span className="ml-1">({assignment.work_dates.length}日間)</span>
             )}

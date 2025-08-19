@@ -83,8 +83,9 @@ export default function AssignmentsClient({
       assignment.staff_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       assignment.project_location.toLowerCase().includes(searchTerm.toLowerCase())
     
-    const matchesMonth = !filterMonth || assignment.work_month.startsWith(filterMonth)
-    const matchesType = filterType === 'all' || assignment.project_type === filterType
+    const matchesMonth = !filterMonth || (assignment.work_month && assignment.work_month.startsWith(filterMonth))
+    const assignmentType = assignment.assignment_type || assignment.project_type || 'spot'
+    const matchesType = filterType === 'all' || assignmentType === filterType
     
     return matchesSearch && matchesMonth && matchesType
   })
@@ -126,18 +127,24 @@ export default function AssignmentsClient({
   }
 
   const calculateRevenue = (assignment: any) => {
-    if (assignment.project_type === 'continuous') {
-      return assignment.daily_rate * (assignment.work_days || 0)
+    const type = assignment.assignment_type || assignment.project_type || 'spot'
+    const rate = assignment.daily_rate || 0
+    
+    if (type === 'continuous') {
+      return rate * (assignment.work_days || 0)
     } else {
-      return assignment.daily_rate * (assignment.work_dates?.length || 0)
+      return rate * (assignment.work_dates?.length || 0)
     }
   }
 
   const calculateProfit = (assignment: any) => {
     const revenue = calculateRevenue(assignment)
-    const cost = assignment.project_type === 'continuous'
-      ? assignment.cost_rate * (assignment.work_days || 0)
-      : assignment.cost_rate * (assignment.work_dates?.length || 0)
+    const type = assignment.assignment_type || assignment.project_type || 'spot'
+    const costRate = assignment.cost_rate || 0
+    
+    const cost = type === 'continuous'
+      ? costRate * (assignment.work_days || 0)
+      : costRate * (assignment.work_dates?.length || 0)
     return revenue - cost
   }
 
@@ -252,11 +259,11 @@ export default function AssignmentsClient({
                         {assignment.project_location}
                       </div>
                       <span className={`inline-flex px-2 py-1 text-xs rounded-full mt-1 ${
-                        assignment.project_type === 'continuous'
+                        (assignment.assignment_type || assignment.project_type) === 'continuous'
                           ? 'bg-green-100 text-green-700'
                           : 'bg-blue-100 text-blue-700'
                       }`}>
-                        {assignment.project_type === 'continuous' ? '継続' : 'スポット'}
+                        {(assignment.assignment_type || assignment.project_type) === 'continuous' ? '継続' : 'スポット'}
                       </span>
                     </div>
                   </td>
@@ -268,11 +275,15 @@ export default function AssignmentsClient({
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm text-gray-900">
-                      {format(new Date(assignment.work_month), 'yyyy年M月', { locale: ja })}
+                      {assignment.work_month ? (
+                        format(new Date(assignment.work_month), 'yyyy年M月', { locale: ja })
+                      ) : (
+                        '日付未設定'
+                      )}
                     </div>
                     <div className="text-sm text-gray-500">
-                      {assignment.project_type === 'continuous'
-                        ? `${assignment.work_days}日`
+                      {(assignment.assignment_type || assignment.project_type) === 'continuous'
+                        ? `${assignment.work_days || 0}日`
                         : `${assignment.work_dates?.length || 0}日`}
                     </div>
                   </td>
