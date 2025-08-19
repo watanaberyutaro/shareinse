@@ -7,7 +7,17 @@
       "Bash(git init:*)",
       "Bash(git branch:*)",
       "Bash(git remote add:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(rm:*)",
+      "Bash(git rm:*)",
+      "Bash(git push:*)",
+      "Bash(mv:*)",
+      "Bash(cp:*)",
+      "Bash(for:*)",
+      "Bash(do mv \"$file\" .)",
+      "Bash(true)",
+      "Bash(done)",
+      "Bash(do [ \"$file\" != \"assign-management/.\" ])"
     ],
     "deny": [],
     "ask": []
