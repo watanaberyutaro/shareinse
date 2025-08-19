@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 5, "column": 0}, "map": {"version":3,"sources":["file:///Users/watanaberyuutarou/Desktop/3125%E6%98%A0%E5%83%8F/myProject/shareinse/assign-management/app/%28protected%29/loading.tsx"],"sourcesContent":["export default function Loading() {\n  return (\n    <div className=\"flex items-center justify-center min-h-[calc(100vh-200px)]\">\n      <div className=\"flex flex-col items-center gap-4\">\n        <div className=\"relative\">\n          <div className=\"h-12 w-12 rounded-full border-4 border-gray-200\"></div>\n          <div className=\"absolute top-0 h-12 w-12 animate-spin rounded-full border-4 border-blue-600 border-t-transparent\"></div>\n        </div>\n        <p className=\"text-sm font-medium text-gray-600\">読み込み中...</p>\n      </div>\n    </div>\n  )\n}"],"names":[],"mappings":";;;;;AAAe,SAAS;IACtB,qBACE,8OAAC;QAAI,WAAU;kBACb,cAAA,8OAAC;YAAI,WAAU;;8BACb,8OAAC;oBAAI,WAAU;;sCACb,8OAAC;4BAAI,WAAU;;;;;;sCACf,8OAAC;4BAAI,WAAU;;;;;;;;;;;;8BAEjB,8OAAC;oBAAE,WAAU;8BAAoC;;;;;;;;;;;;;;;;;AAIzD","debugId":null}}]
-}

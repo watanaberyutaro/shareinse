@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 6, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
-    {"offset": {"line": 26, "column": 0}, "map": {"version":3,"sources":["file:///Users/watanaberyuutarou/Desktop/3125%E6%98%A0%E5%83%8F/myProject/shareinse/assign-management/app/%28protected%29/admin/users/page.tsx"],"sourcesContent":["import { createClient } from '@/lib/supabase/server'\nimport { requireAdmin } from '@/lib/auth'\nimport UsersClient from './UsersClient'\n\nexport default async function UsersPage() {\n  await requireAdmin()\n  const supabase = await createClient()\n\n  const { data: users } = await supabase\n    .from('profiles')\n    .select(`\n      *,\n      departments (\n        id,\n        name\n      )\n    `)\n    .order('created_at', { ascending: false })\n\n  const { data: departments } = await supabase\n    .from('departments')\n    .select('*')\n    .order('name')\n\n  return <UsersClient users={users || []} departments={departments || []} />\n}"],"names":[],"mappings":";;;;AAAA;AACA;;;;;;;;;;AAGe,eAAe;IAC5B,MAAM,CAAA,GAAA,2GAAA,CAAA,eAAY,AAAD;IACjB,MAAM,WAAW,MAAM,CAAA,GAAA,yHAAA,CAAA,eAAY,AAAD;IAElC,MAAM,EAAE,MAAM,KAAK,EAAE,GAAG,MAAM,SAC3B,IAAI,CAAC,YACL,MAAM,CAAC,CAAC;;;;;;IAMT,CAAC,EACA,KAAK,CAAC,cAAc;QAAE,WAAW;IAAM;IAE1C,MAAM,EAAE,MAAM,WAAW,EAAE,GAAG,MAAM,SACjC,IAAI,CAAC,eACL,MAAM,CAAC,KACP,KAAK,CAAC;IAET,qBAAO,8OAAC;QAAY,OAAO,SAAS,EAAE;QAAE,aAAa,eAAe,EAAE;;;;;;AACxE","debugId":null}}]
-}
