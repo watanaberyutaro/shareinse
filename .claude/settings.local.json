@@ -22,7 +22,8 @@
       "Bash(wc:*)",
       "Bash(npm run build:*)",
       "Bash(npm run lint:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(npx tsx:*)"
     ],
     "deny": [],
     "ask": []
